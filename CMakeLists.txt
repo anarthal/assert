@@ -9,28 +9,22 @@ project(boost_assert VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 
 if (BOOST_CXX20_MODULE)
-  add_library(boost_assert)
+  add_library(boost_assert STATIC)
+  boost_set_cxx20_module_settings(boost_assert)
   target_sources(boost_assert PUBLIC FILE_SET CXX_MODULES FILES modules/assert.cxx)
-  target_include_directories(boost_assert PUBLIC include)
-  target_compile_features(boost_assert PUBLIC cxx_std_23)
-  set_target_properties(boost_assert PROPERTIES CXX_MODULE_STD 1)
-  target_compile_definitions(boost_assert PRIVATE BOOST_CXX20_MODULE)
-  target_compile_options(boost_assert PUBLIC -Wno-include-angled-in-module-purview) # TODO: scope this to clang
-  target_link_libraries(boost_assert PUBLIC
-    Boost::config
-  )
+  set(__scope PUBLIC)
 else()
   add_library(boost_assert INTERFACE)
-  target_include_directories(boost_assert INTERFACE include)
-  target_link_libraries(boost_assert
-    INTERFACE
-    Boost::config
-)
+  set(__scope INTERFACE)
 endif()
 
 
 add_library(Boost::assert ALIAS boost_assert)
-
+target_include_directories(boost_assert ${__scope} include)
+target_link_libraries(boost_assert
+  ${__scope}
+    Boost::config
+)
 
 if(CMAKE_VERSION VERSION_GREATER 3.18 AND CMAKE_GENERATOR MATCHES "Visual Studio")
 
