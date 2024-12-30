@@ -7,4 +7,6 @@ export module boost.assert;
 
 import std;
 
+extern "C++" {
 #include <boost/assert/source_location.hpp>
+}
