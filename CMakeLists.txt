@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.5...3.20)
 project(boost_assert VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 
-if (BOOST_CXX20_MODULE)
+if (BOOST_USE_MODULES)
   add_library(boost_assert STATIC)
   boost_set_cxx20_module_settings(boost_assert)
   target_sources(boost_assert PUBLIC FILE_SET CXX_MODULES BASE_DIRS modules FILES modules/boost_assert.cppm)
