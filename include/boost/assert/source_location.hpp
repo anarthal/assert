@@ -7,8 +7,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // http://www.boost.org/LICENSE_1_0.txt
 
-#include <boost/config/modules.hpp> // BOOST_MODULE_EXPORT
-
 #ifndef BOOST_USE_MODULES
 #include <boost/config.hpp>
 #include <boost/cstdint.hpp>
@@ -22,10 +20,18 @@
 #endif
 #endif
 
+// BOOST_ASSERT_MODULE_EXPORT
+
+#ifdef BOOST_USE_MODULES
+#  define BOOST_ASSERT_MODULE_EXPORT export
+#else
+#  define BOOST_ASSERT_MODULE_EXPORT
+#endif
+
 namespace boost
 {
 
-BOOST_MODULE_EXPORT struct source_location
+BOOST_ASSERT_MODULE_EXPORT struct source_location
 {
 private:
 
@@ -136,7 +142,7 @@ public:
     }
 };
 
-BOOST_MODULE_EXPORT
+BOOST_ASSERT_MODULE_EXPORT
 template<class E, class T> std::basic_ostream<E, T> & operator<<( std::basic_ostream<E, T> & os, source_location const & loc )
 {
     os << loc.to_string();
