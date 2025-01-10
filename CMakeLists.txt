@@ -10,9 +10,20 @@ project(boost_assert VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 if (BOOST_USE_MODULES)
   add_library(boost_assert STATIC)
-  boost_set_cxx20_module_settings(boost_assert)
   target_sources(boost_assert PUBLIC FILE_SET CXX_MODULES BASE_DIRS modules FILES modules/boost_assert.cppm)
   set(__scope PUBLIC)
+
+  # Enable and propagate C++23, import std, and the modules macro
+  target_compile_features(boost_assert PUBLIC cxx_std_23)
+  set_target_properties(boost_assert PROPERTIES CXX_MODULE_STD 1)
+  target_compile_definitions(boost_assert PUBLIC BOOST_USE_MODULES)
+
+  # Silence warnings about includes in the purview
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(boost_assert PRIVATE -Wno-include-angled-in-module-purview)
+  elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(boost_assert PRIVATE /wd5244)
+  endif()
 else()
   add_library(boost_assert INTERFACE)
   set(__scope INTERFACE)
