@@ -17,6 +17,10 @@ if(NOT BOOST_USE_MODULES)
   target_include_directories(boost_assert INTERFACE include)
 else()
   target_compile_definitions(boost_assert INTERFACE BOOST_USE_MODULES)
+endif()
+
+# Note: usable starting with cmake v3.23
+if(NOT CMAKE_VERSION VERSION_LESS 3.23)
   target_sources(
     boost_assert
     PUBLIC
