@@ -2,24 +2,42 @@
 # Distributed under the Boost Software License, Version 1.0.
 # https://www.boost.org/LICENSE_1_0.txt
 
-# We support CMake 3.5, but prefer 3.31 policies and behavior
-cmake_minimum_required(VERSION 3.5...3.31)
+# We support CMake 3.5, but prefer 4.3 policies and behavior
+cmake_minimum_required(VERSION 3.5...4.3)
 
 project(boost_assert VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 add_library(boost_assert INTERFACE)
 add_library(Boost::assert ALIAS boost_assert)
 
-target_include_directories(boost_assert INTERFACE include)
+# -----------------------------------------------------------------------------
+# Include headers
+# -----------------------------------------------------------------------------
+if(NOT BOOST_USE_MODULES)
+  target_include_directories(boost_assert INTERFACE include)
+else()
+  target_compile_definitions(boost_assert INTERFACE BOOST_USE_MODULES)
+endif()
+
+# Note: usable starting with cmake v3.23
+if(NOT CMAKE_VERSION VERSION_LESS 3.23)
+  target_sources(
+    boost_assert
+    PUBLIC
+      FILE_SET headers_public
+        TYPE HEADERS
+        BASE_DIRS include
+        FILES
+          include/boost/assert.hpp
+          include/boost/assert/source_location.hpp
+          include/boost/current_function.hpp
+  )
+endif()
 
 target_link_libraries(boost_assert
   INTERFACE
     Boost::config
 )
-
-if (BOOST_USE_MODULES)
-  target_compile_definitions(boost_assert INTERFACE BOOST_USE_MODULES)
-endif()
 
 # Add headers and .natvis to project, for better IDE integration
 
